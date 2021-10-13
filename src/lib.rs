@@ -14,8 +14,10 @@ pub mod tcp {
         ///
         /// The contents of opaque types are hidden from the other langauge
         /// while the native language can inspect the contents.
+        #[namespace = "tcp"]
         type TcpStream;
 
+        #[namespace = "tcp"]
         fn connect(addr: String) -> Result<Box<TcpStream>>;
 
         fn read(&mut self, buf: &mut [u8]) -> Result<usize>;
@@ -37,8 +39,10 @@ pub mod tcp {
 #[cxx::bridge]
 pub mod udp {
     extern "Rust" {
+        #[namespace = "udp"]
         type UdpSocket;
 
+        #[namespace = "udp"]
         fn bind(addr: String) -> Result<Box<UdpSocket>>;
 
         fn connect(&self, addr: String) -> Result<()>;
