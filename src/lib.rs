@@ -38,11 +38,44 @@ pub mod tcp {
 pub mod udp {
     extern "Rust" {
         type UdpSocket;
+
+        fn bind(addr: String) -> Result<Box<UdpSocket>>;
+
+        fn connect(&self, addr: String) -> Result<()>;
+
+        fn peek(&self, buf: &mut [u8]) -> Result<usize>;
+
+        fn recv(&self, buf: &mut [u8]) -> Result<usize>;
+
+        fn send(&self, buf: &[u8]) -> Result<usize>;
     }
 }
 
 pub struct UdpSocket {
     socket: std::net::UdpSocket,
+}
+
+fn bind(addr: String) -> Result<Box<UdpSocket>> {
+    let socket = std::net::UdpSocket::bind(addr)?;
+    Ok(Box::new(UdpSocket { socket }))
+}
+
+impl UdpSocket {
+    fn connect(&self, addr: String) -> Result<()> {
+        self.socket.connect(addr).map_err(Into::into)
+    }
+
+    fn peek(&self, buf: &mut [u8]) -> Result<usize> {
+        self.socket.peek(buf).map_err(Into::into)
+    }
+
+    fn recv(&self, buf: &mut [u8]) -> Result<usize> {
+        self.socket.recv(buf).map_err(Into::into)
+    }
+
+    fn send(&self, buf: &[u8]) -> Result<usize> {
+        self.socket.send(buf).map_err(Into::into)
+    }
 }
 
 pub struct TcpStream {
